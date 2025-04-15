@@ -25,8 +25,9 @@ print(f"Using database at: {DB_PATH}")
 # Check if database exists, if not initialize it
 if not os.path.exists(DB_PATH):
     print("Database not found. Initializing database...")
-    # Import the initialize_database function from app.py
-    from app import initialize_database
+    # Import the initialize_database function from db_init
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    from db_init import initialize_database
     initialize_database()
 
 # Page configuration
