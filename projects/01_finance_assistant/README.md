@@ -38,7 +38,7 @@ This application was developed to address the need for a user-friendly tool that
 - **Intelligent Forecasting**: Predict future spending using time series analysis based on historical data
 - **Transaction Management**: View, filter, and analyze individual transactions
 - **CSV Data Import**: Import transaction data from various CSV formats with flexible column mapping
-- **Interactive Chat Assistant**: Get personalized financial insights and advice through a natural language interface
+- **AI-Powered Chat Assistant**: Get personalized financial insights and advice through a natural language interface powered by locally running LLMs via Ollama
 - **Multi-user Support**: Manage financial data for multiple users separately
 - **Responsive UI**: Modern, user-friendly interface with responsive design elements
 - **Data Visualization**: Interactive charts and graphs for better understanding of financial patterns
@@ -55,6 +55,7 @@ This application was developed to address the need for a user-friendly tool that
 │   ├── README.md                 # Documentation for models directory
 │   ├── categorizer.py            # Transaction categorization logic
 │   ├── forecaster.py             # Spending forecasting model using time series analysis
+│   ├── llm_assistant.py          # Ollama LLM integration for AI-powered chat
 │   └── recommender.py            # Financial recommendation engine
 │
 ├── tests/                        # Test files
@@ -84,10 +85,12 @@ This application was developed to address the need for a user-friendly tool that
 │   └── visualizations.py         # Visualization utilities
 │
 ├── app.py                        # Command-line application for initialization
+├── db_init.py                    # Database initialization module
 ├── finance.db                    # SQLite database for storing financial data
 ├── requirements.txt              # Project dependencies
 ├── run.py                        # Script to run the application with automatic setup
 ├── run_streamlit.py              # Script to run the Streamlit UI
+├── test_ollama.py                # Script to test Ollama LLM connectivity
 ├── .gitignore                    # Git ignore file
 └── README.md                     # Project documentation
 ```
@@ -101,6 +104,8 @@ This application was developed to address the need for a user-friendly tool that
   - **numpy**: Numerical computing
   - **statsmodels**: Statistical models for time series forecasting
   - **python-dateutil**: Advanced date manipulation
+  - **Ollama**: Local deployment of Large Language Models
+  - **Llama 3 / Mistral**: Open-source Large Language Models for AI chat
 
 - **Frontend**:
   - **Streamlit**: Web application framework for data applications
@@ -117,6 +122,9 @@ This application was developed to address the need for a user-friendly tool that
 ### Prerequisites
 - Python 3.8 or higher
 - Git (for cloning the repository)
+- Ollama (optional, for AI-powered chat)
+  - Install from [Ollama.ai](https://ollama.ai/)
+  - Pull at least one model: `ollama pull llama3` or `ollama pull mistral`
 
 ### Option 1: Direct Installation from GitHub (Recommended)
 
@@ -291,11 +299,14 @@ The Chat Assistant tab provides an interactive interface to ask questions about 
 - **Chat Interface**: Ask questions and receive personalized financial insights
 - **Quick Questions**: Buttons for common financial queries
 - **Chat History**: View and clear your conversation history
+- **AI Settings**: Configure the LLM model and parameters in the sidebar
 
 **Usage Tips**:
 - Ask questions in natural language about your income, spending, savings, etc.
 - Use the quick question buttons for common queries
 - The assistant analyzes your financial data to provide personalized responses
+- If Ollama is running, you'll see "✅ Ollama LLM is available" in the sidebar
+- You can select different LLM models and adjust the temperature setting
 - See the [Chat Assistant Capabilities](#chat-assistant-capabilities) section for example questions
 
 ## CSV Upload Feature
@@ -333,6 +344,25 @@ These sample files are accessible directly from the Upload Data tab in the appli
 ## Chat Assistant Capabilities
 
 The chat assistant uses natural language processing to understand and respond to questions about your finances. It analyzes your financial data to provide personalized insights and recommendations.
+
+### AI Integration
+
+The chat assistant is powered by two different engines:
+
+1. **Rule-based Engine**: A fallback system that uses pattern matching and conditional logic to answer common financial questions
+
+2. **Large Language Model (LLM)**: An advanced AI system using locally running Ollama models for more natural and comprehensive responses
+
+The LLM integration requires:
+- Ollama running locally (default: http://localhost:11434)
+- At least one model pulled in Ollama (e.g., llama3, mistral)
+
+You can test the Ollama connectivity using the included test script:
+```bash
+python test_ollama.py
+```
+
+If Ollama is available, the chat assistant will use it automatically. If not, it will fall back to the rule-based engine.
 
 ### Query Types
 
@@ -462,6 +492,13 @@ The project follows PEP 8 style guidelines for Python code. Key conventions incl
    - Clear your browser cache
    - Try a different browser
 
+5. **Ollama LLM Not Working**:
+   - Verify Ollama is installed and running (`ollama list` or check Docker container)
+   - Make sure you've pulled at least one model (`ollama pull llama3`)
+   - Run the test script to check connectivity: `python test_ollama.py`
+   - Check if port 11434 is accessible and not blocked by a firewall
+   - If using Docker, ensure port forwarding is configured correctly
+
 ### Getting Help
 
 If you encounter issues not covered in this documentation:
@@ -480,7 +517,8 @@ The Finance Assistant project is currently in a completed state with all core fe
 - Future expense forecasting
 - Transaction management
 - CSV data import
-- Interactive chat assistant
+- AI-powered chat assistant with Ollama LLM integration
+- Local LLM model selection and configuration
 
 ### Future Plans
 
@@ -488,10 +526,12 @@ While the core functionality is complete, there are several potential enhancemen
 
 1. **Mobile Responsiveness**: Enhance the UI for better mobile device support
 2. **Advanced Analytics**: Implement more sophisticated financial analysis algorithms
-3. **Machine Learning Integration**: Add ML-based transaction categorization
+3. **ML-based Categorization**: Add machine learning for automatic transaction categorization
 4. **Export Functionality**: Add options to export data and reports
 5. **Multi-currency Support**: Add support for multiple currencies
 6. **Cloud Synchronization**: Add the ability to sync data across devices
+7. **Enhanced LLM Integration**: Add fine-tuning for financial domain knowledge
+8. **Voice Interface**: Add speech recognition for voice queries
 
 ## Repository Structure
 
@@ -528,6 +568,8 @@ cd AI-Engineering-Mastery/projects/01_finance_assistant
 - **Plotly** - For the interactive visualization capabilities
 - **Pandas** - For powerful data manipulation and analysis
 - **SQLite** - For the lightweight database engine
+- **Ollama** - For making local LLM deployment accessible
+- **Llama 3 / Mistral** - For the open-source LLM models
 - **Open Source Community** - For the various libraries and tools that made this project possible
 
 ## License
