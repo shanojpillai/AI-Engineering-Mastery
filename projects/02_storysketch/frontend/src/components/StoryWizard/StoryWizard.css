@@ -1,0 +1,111 @@
+.story-wizard {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.wizard-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.wizard-header h1 {
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+}
+
+.wizard-progress {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.wizard-progress::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--light-gray);
+  z-index: 1;
+}
+
+.progress-step {
+  position: relative;
+  background-color: var(--background-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  z-index: 2;
+  color: var(--medium-gray);
+  border: 1px solid var(--light-gray);
+}
+
+.progress-step.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.wizard-content {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 2rem;
+}
+
+.error-message {
+  background-color: #ffebee;
+  border-left: 4px solid var(--error-color);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-message p {
+  margin: 0;
+  color: var(--error-color);
+}
+
+.error-message button {
+  background: none;
+  border: none;
+  color: var(--error-color);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .story-wizard {
+    padding: 1rem;
+  }
+  
+  .wizard-progress {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .wizard-progress::before {
+    display: none;
+  }
+  
+  .progress-step {
+    width: 100%;
+  }
+  
+  .wizard-content {
+    padding: 1rem;
+  }
+}

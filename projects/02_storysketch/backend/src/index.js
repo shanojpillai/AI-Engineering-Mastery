@@ -12,11 +12,9 @@ const authRoutes = require('./routes/auth.routes');
 const storyRoutes = require('./routes/story.routes');
 const userRoutes = require('./routes/user.routes');
 const llmRoutes = require('./routes/llm.routes');
-const imageRoutes = require('./routes/image.routes');
-const exportRoutes = require('./routes/export.routes');
 
 // Import middleware
-const { errorHandler } = require('./middleware/errorHandler');
+const { errorHandler, notFound } = require('./middleware/errorHandler');
 const { authenticateToken } = require('./middleware/auth');
 
 // Initialize Express app
@@ -31,16 +29,17 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // Define routes
 app.use('/api/auth', authRoutes);
-app.use('/api/stories', authenticateToken, storyRoutes);
-app.use('/api/users', authenticateToken, userRoutes);
-app.use('/api/llm', authenticateToken, llmRoutes);
-app.use('/api/images', authenticateToken, imageRoutes);
-app.use('/api/export', authenticateToken, exportRoutes);
+app.use('/api/stories', storyRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/llm', llmRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
+
+// 404 handler for undefined routes
+app.use(notFound);
 
 // Error handling middleware
 app.use(errorHandler);
