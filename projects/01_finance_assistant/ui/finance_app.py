@@ -9,6 +9,7 @@ from datetime import datetime
 # Add the parent directory to the path so we can import from models
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models.forecaster import SpendingForecaster
+from models.llm_assistant import OllamaAssistant
 
 # Database path - use absolute path to avoid issues
 DB_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), "finance.db"))
@@ -728,6 +729,50 @@ def main():
         step=1
     )
 
+    # LLM Assistant settings
+    st.sidebar.title("AI Assistant Settings")
+
+    # Initialize Ollama assistant
+    ollama_assistant = OllamaAssistant()
+
+    # Check if Ollama is available
+    ollama_available = ollama_assistant.check_ollama_availability()
+
+    if ollama_available:
+        st.sidebar.success("✅ Ollama LLM is available")
+
+        # Get available models
+        available_models = ollama_assistant.get_available_models()
+
+        if available_models:
+            # Model selection
+            selected_model = st.sidebar.selectbox(
+                "Select LLM Model",
+                options=available_models,
+                index=0
+            )
+
+            # Update the model in the assistant
+            ollama_assistant.model_name = selected_model
+
+            # Temperature setting
+            temperature = st.sidebar.slider(
+                "Temperature",
+                min_value=0.1,
+                max_value=1.0,
+                value=0.7,
+                step=0.1,
+                help="Higher values make the output more random, lower values make it more deterministic"
+            )
+        else:
+            st.sidebar.warning("No models available. Please pull a model using Ollama CLI.")
+            selected_model = None
+            temperature = 0.7
+    else:
+        st.sidebar.error("❌ Ollama LLM is not available. Make sure it's running at http://localhost:11434")
+        selected_model = None
+        temperature = 0.7
+
     # Create forecaster instance
     forecaster = SpendingForecaster(DB_PATH)
 
@@ -1059,14 +1104,31 @@ def main():
 
             # Generate response
             with st.spinner("Thinking..."):
-                response = get_chatbot_response(
-                    selected_user_id,
-                    user_question,
-                    spending_history,
-                    forecast,
-                    transactions,
-                    user_info
-                )
+                # Prepare financial data for the LLM
+                financial_data = {
+                    "user_info": dict(user_info),
+                    "spending_history": spending_history,
+                    "forecast": forecast,
+                    "transactions": transactions
+                }
+
+                # Use Ollama LLM if available, otherwise fall back to rule-based responses
+                if ollama_available and selected_model:
+                    response = ollama_assistant.generate_response(
+                        user_question,
+                        financial_data,
+                        temperature=temperature
+                    )
+                else:
+                    # Fall back to rule-based responses if Ollama is not available
+                    response = get_chatbot_response(
+                        selected_user_id,
+                        user_question,
+                        spending_history,
+                        forecast,
+                        transactions,
+                        user_info
+                    )
 
             # Add assistant response to chat history
             st.session_state.chat_history.append({"is_user": False, "text": response})
