@@ -16,8 +16,9 @@ DB_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)
 # Check if database exists, if not initialize it
 if not os.path.exists(DB_PATH):
     print("Database not found. Initializing database...")
-    # Import the initialize_database function from app.py
-    from app import initialize_database
+    # Import the initialize_database function from db_init
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from db_init import initialize_database
     initialize_database()
 
 # Page configuration
@@ -921,7 +922,7 @@ def main():
             st.dataframe(pd.DataFrame(sample_data), use_container_width=True)
 
             # Provide a download link for a sample CSV file
-            sample_csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_transactions.csv")
+            sample_csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_data", "sample_transactions.csv")
             if os.path.exists(sample_csv_path):
                 with open(sample_csv_path, "r", encoding="utf-8") as f:
                     sample_csv_content = f.read()
@@ -932,6 +933,33 @@ def main():
                     file_name="sample_transactions.csv",
                     mime="text/csv"
                 )
+
+            # Sample CSV files
+            st.subheader("Sample CSV Files")
+            st.write("You can download these sample CSV files to test the upload feature:")
+
+            sample_files = {
+                "sample_data/simple_transactions.csv": "Basic format with date, amount, and category",
+                "sample_data/bank_statement_sample.csv": "Bank statement format with debit/credit columns",
+                "sample_data/credit_card_statement.csv": "Credit card statement with detailed categories",
+                "sample_data/european_format.csv": "European format with semicolons and comma decimals",
+                "sample_data/very_simple.csv": "Minimal example for testing"
+            }
+
+            for file_name, description in sample_files.items():
+                file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), file_name)
+                if os.path.exists(file_path):
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        file_content = f.read()
+
+                    st.download_button(
+                        label=f"Download {os.path.basename(file_name)}",
+                        data=file_content,
+                        file_name=os.path.basename(file_name),
+                        mime="text/csv",
+                        key=f"download_{file_name}"
+                    )
+                    st.write(description)
 
     # Chat Assistant Tab
     with tabs[4]:

@@ -46,22 +46,48 @@ This application was developed to address the need for a user-friendly tool that
 ## Project Structure
 
 ```
-finance_assistant/
+01_finance_assistant/
+├── data/                         # Data-related files
+│   ├── README.md                 # Documentation for data directory
+│   └── schema.sql                # SQL schema for database initialization
+│
 ├── models/                       # Model implementations
-│   └── forecaster.py             # Spending forecasting model using time series analysis
+│   ├── README.md                 # Documentation for models directory
+│   ├── categorizer.py            # Transaction categorization logic
+│   ├── forecaster.py             # Spending forecasting model using time series analysis
+│   └── recommender.py            # Financial recommendation engine
+│
+├── tests/                        # Test files
+│   ├── README.md                 # Documentation for tests directory
+│   └── test_forecaster.py        # Tests for the forecasting model
+│
 ├── ui/                           # Streamlit user interface
-│   ├── app.py                    # Original Streamlit application
+│   ├── README.md                 # Documentation for UI directory
 │   ├── finance_app.py            # Enhanced Streamlit application with chat feature
-│   ├── sample_transactions.csv   # Sample CSV file for testing
-│   ├── bank_statement_sample.csv # Sample bank statement format
-│   ├── credit_card_statement.csv # Sample credit card statement format
-│   ├── european_format.csv       # Sample European format CSV
-│   ├── very_simple.csv           # Minimal CSV example
-│   └── sample_csv_readme.md      # Documentation for sample CSV files
-├── app.py                        # Command-line application
+│   ├── legacy/                   # Older versions of the UI
+│   │   ├── README.md             # Documentation for legacy UI files
+│   │   ├── app.py                # Original Streamlit application
+│   │   ├── basic_app.py          # Simplified version of the UI
+│   │   └── simple_app.py         # Minimal implementation of the UI
+│   └── sample_data/              # Sample CSV files for testing
+│       ├── README.md             # Documentation for sample data files
+│       ├── bank_statement_sample.csv # Bank statement format
+│       ├── credit_card_statement.csv # Credit card statement format
+│       ├── european_format.csv   # European format with semicolons
+│       ├── sample_transactions.csv # Basic sample transactions
+│       ├── simple_transactions.csv # Simple format for testing
+│       └── very_simple.csv       # Minimal example for testing
+│
+├── utils/                        # Utility functions and helpers
+│   ├── README.md                 # Documentation for utils directory
+│   ├── data_processor.py         # Data processing utilities
+│   └── visualizations.py         # Visualization utilities
+│
+├── app.py                        # Command-line application for initialization
 ├── finance.db                    # SQLite database for storing financial data
 ├── requirements.txt              # Project dependencies
 ├── run.py                        # Script to run the application with automatic setup
+├── run_streamlit.py              # Script to run the Streamlit UI
 ├── .gitignore                    # Git ignore file
 └── README.md                     # Project documentation
 ```
@@ -90,14 +116,32 @@ finance_assistant/
 
 ### Prerequisites
 - Python 3.8 or higher
-- Git (optional, for cloning the repository)
+- Git (for cloning the repository)
 
-### Step-by-Step Installation
+### Option 1: Direct Installation from GitHub (Recommended)
 
-1. **Clone the repository** (or download and extract the ZIP file):
+1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/finance-assistant.git
-   cd finance-assistant
+   git clone https://github.com/shanojpillai/AI-Engineering-Mastery.git
+   cd AI-Engineering-Mastery/projects/01_finance_assistant
+   ```
+
+2. **Run the setup script** (automatically creates virtual environment and installs dependencies):
+   ```bash
+   python run.py
+   ```
+   This script will:
+   - Create a virtual environment if it doesn't exist
+   - Install all required dependencies
+   - Initialize the database if needed
+   - Launch the Streamlit application
+
+### Option 2: Manual Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/shanojpillai/AI-Engineering-Mastery.git
+   cd AI-Engineering-Mastery/projects/01_finance_assistant
    ```
 
 2. **Create a virtual environment**:
@@ -136,7 +180,7 @@ finance_assistant/
 
 ## Running the Application
 
-### Using the Run Script (Recommended)
+### Option 1: Using the Run Script (Recommended)
 
 The easiest way to run the application is using the provided run script, which handles virtual environment setup and dependency installation automatically:
 
@@ -144,25 +188,48 @@ The easiest way to run the application is using the provided run script, which h
 python run.py
 ```
 
-### Manual Execution
+This script will:
+- Check if a virtual environment exists and create one if needed
+- Install all required dependencies
+- Initialize the database if it doesn't exist
+- Launch the Streamlit application with the enhanced UI
 
-#### Enhanced UI with Chat Feature
+### Option 2: Using the Streamlit Run Script
+
+If you've already set up the environment and initialized the database, you can use the streamlit run script:
+
+```bash
+python run_streamlit.py
+```
+
+### Option 3: Manual Execution
+
+#### Enhanced UI with Chat Feature (Recommended)
 
 ```bash
 python -m streamlit run ui/finance_app.py
 ```
 
-#### Original UI
+#### Legacy UI (Original Version)
 
 ```bash
-python -m streamlit run ui/app.py
+python -m streamlit run ui/legacy/app.py
 ```
 
-#### Command-line Application
+#### Command-line Application (Database Initialization)
 
 ```bash
 python app.py
 ```
+
+### Accessing the Application
+
+Once the application is running, open your web browser and go to:
+```
+http://localhost:8501
+```
+
+The application will be accessible through your web browser with a modern, responsive interface.
 
 ## User Guide
 
@@ -253,13 +320,15 @@ When uploading a CSV file, you need to map the columns to the appropriate fields
 
 ### Sample Files
 
-The application includes several sample CSV files in the `ui` directory:
+The application includes several sample CSV files in the `ui/sample_data` directory:
 
 - **simple_transactions.csv**: Basic format with date, amount, and category
 - **bank_statement_sample.csv**: Bank statement format with debit/credit columns
 - **credit_card_statement.csv**: Credit card statement with detailed categories
 - **european_format.csv**: European format with semicolons and comma decimals
 - **very_simple.csv**: Minimal example for testing
+
+These sample files are accessible directly from the Upload Data tab in the application. You can download them and use them as templates for your own data.
 
 ## Chat Assistant Capabilities
 
@@ -325,6 +394,30 @@ The application uses time series analysis to forecast future spending based on h
 
 The model analyzes spending patterns by category and generates predictions for future months based on historical trends and seasonality.
 
+## Documentation
+
+The project includes comprehensive documentation at multiple levels:
+
+### Main Documentation
+
+This README.md file serves as the main documentation for the entire project, providing an overview of all features, installation instructions, and usage guidelines.
+
+### Directory-Level Documentation
+
+Each directory contains its own README.md file with detailed information about the files and functionality in that directory:
+
+- **data/README.md**: Information about the database schema and data structure
+- **models/README.md**: Details about the forecasting, categorization, and recommendation models
+- **tests/README.md**: Information about the test suite and how to run tests
+- **ui/README.md**: Documentation for the user interface components
+- **ui/legacy/README.md**: Information about older versions of the UI
+- **ui/sample_data/README.md**: Details about the sample CSV files
+- **utils/README.md**: Information about utility functions and helpers
+
+### Code Documentation
+
+The code itself is well-documented with docstrings and comments explaining the functionality and usage of each component.
+
 ## Development
 
 ### Adding New Features
@@ -335,7 +428,8 @@ To add new features to the application:
 2. Implement the feature in the appropriate files
 3. Add any necessary dependencies to `requirements.txt`
 4. Test the feature thoroughly
-5. Create a pull request to merge your changes
+5. Update the relevant documentation
+6. Create a pull request to merge your changes
 
 ### Code Style
 
@@ -376,10 +470,70 @@ If you encounter issues not covered in this documentation:
 2. Create a new issue with detailed information about the problem
 3. Include error messages, steps to reproduce, and your environment details
 
+## Project Status and Roadmap
+
+### Current Status
+
+The Finance Assistant project is currently in a completed state with all core features implemented and functioning. The application provides a comprehensive set of tools for financial management, including:
+
+- Spending history analysis and visualization
+- Future expense forecasting
+- Transaction management
+- CSV data import
+- Interactive chat assistant
+
+### Future Plans
+
+While the core functionality is complete, there are several potential enhancements that could be implemented in future updates:
+
+1. **Mobile Responsiveness**: Enhance the UI for better mobile device support
+2. **Advanced Analytics**: Implement more sophisticated financial analysis algorithms
+3. **Machine Learning Integration**: Add ML-based transaction categorization
+4. **Export Functionality**: Add options to export data and reports
+5. **Multi-currency Support**: Add support for multiple currencies
+6. **Cloud Synchronization**: Add the ability to sync data across devices
+
+## Repository Structure
+
+This project is part of the AI-Engineering-Mastery repository, which contains multiple AI and machine learning projects. The Finance Assistant is located in the `projects/01_finance_assistant` directory.
+
+The repository structure is as follows:
+
+```
+AI-Engineering-Mastery/
+├── projects/                      # Directory containing all projects
+│   ├── 01_finance_assistant/      # This project
+│   ├── 02_project_name/           # Future project
+│   └── ...                        # Additional projects
+└── README.md                      # Main repository documentation
+```
+
+To access this project specifically, clone the repository and navigate to the project directory:
+
+```bash
+git clone https://github.com/shanojpillai/AI-Engineering-Mastery.git
+cd AI-Engineering-Mastery/projects/01_finance_assistant
+```
+
+## Contributors and Acknowledgments
+
+### Contributors
+
+- **Shanoj Pillai** - Project Lead and Main Developer
+- **AI Engineering Team** - Development and Documentation
+
+### Acknowledgments
+
+- **Streamlit** - For providing an excellent framework for building data applications
+- **Plotly** - For the interactive visualization capabilities
+- **Pandas** - For powerful data manipulation and analysis
+- **SQLite** - For the lightweight database engine
+- **Open Source Community** - For the various libraries and tools that made this project possible
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
-© 2023 Finance Assistant Team. All rights reserved.
+© 2024 Finance Assistant Team. All rights reserved.

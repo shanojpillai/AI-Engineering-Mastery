@@ -24,6 +24,7 @@ var/
 venv/
 ENV/
 env/
+.venv/
 
 # IDE
 .idea/
@@ -37,9 +38,13 @@ env/
 # Database
 *.db
 *.sqlite3
+test_finance.db
 
 # Logs
 *.log
+
+# Git
+.git/
 
 # OS specific
 .DS_Store
