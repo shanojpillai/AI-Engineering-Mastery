@@ -1,12 +1,12 @@
 {
-  "name": "storysketch-backend",
-  "version": "1.0.0",
-  "description": "Backend for StorySketch - LLM-Powered Social Story Generator",
-  "main": "src/index.js",
+  "name": "storysketch-backend-mvp",
+  "version": "0.1.0",
+  "description": "StorySketch MVP backend server",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "jest"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test-ollama": "node ../quick-test-ollama.js"
   },
   "dependencies": {
     "express": "^4.18.2",
