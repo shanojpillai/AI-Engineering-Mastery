@@ -1,6 +1,18 @@
 # AI Engineering Mastery
 
-A comprehensive repository showcasing various AI and machine learning projects, demonstrating practical applications and engineering best practices.
+A comprehensive repository showcasing 15 AI and machine learning projects, demonstrating practical applications and engineering best practices. This series follows an MVP (Minimum Viable Product) approach, focusing on quick development and deployment while integrating various AI technologies.
+
+## About This Series
+
+The AI Engineering Mastery series aims to build 15 practical AI applications, each focusing on different aspects of AI engineering:
+
+- **Local AI Integration**: Using tools like Ollama for local LLM deployment
+- **Cloud AI Services**: Leveraging cloud-based AI APIs when appropriate
+- **Full-Stack Development**: Building complete applications with frontend and backend components
+- **Data Processing**: Implementing efficient data pipelines for AI applications
+- **Deployment Strategies**: Exploring various deployment options including Docker
+
+Each project is designed to be practical, educational, and deployable directly from the repository.
 
 ## Projects
 
@@ -151,21 +163,89 @@ Get personalized forecasts for future expenses and targeted savings recommendati
 - [x] Advanced visualizations
 - [x] Comprehensive documentation
 
+### 2. StorySketch
+
+**Status: MVP Completed**
+
+An LLM-powered social story generator for K-12 learners, particularly those with developmental needs. The application allows educators and parents to create personalized social stories with customizable parameters, helping children understand social scenarios and develop specific skills.
+
+![StorySketch Interface](https://via.placeholder.com/800x400?text=StorySketch+Interface)
+
+#### Key Features
+- **LLM-Powered Story Generation**: Creates age-appropriate social stories using locally running LLMs
+- **Docker Integration**: Works with Ollama running in Docker containers
+- **Customizable Parameters**: Adjusts age group, complexity, tone, and other story elements
+- **Story Management**: Save, edit, and organize generated stories
+- **Print-Ready Output**: Format stories for classroom or therapeutic use
+
+#### Tech Stack
+- **Frontend**: React for the user interface
+- **Backend**: Node.js/Express for the API
+- **LLM Integration**: Ollama for local LLM deployment
+- **Storage**: File-based (MVP) with database option for full version
+- **Deployment**: Docker support for easy setup
+
+#### Getting Started
+```bash
+# Navigate to the project directory
+cd AI-Engineering-Mastery/projects/02_storysketch
+
+# Test Ollama connection
+node quick-test-ollama.js
+
+# Start the backend
+cd backend
+npm install
+npm run dev
+
+# Start the frontend (in a new terminal)
+cd ../frontend
+npm install
+npm start
+```
+
+For more details, see the [StorySketch README](projects/02_storysketch/README.md) and [MVP Guide](projects/02_storysketch/README-MVP.md).
+
 ### Future Projects
-- [ ] Project 2: Coming soon
-- [ ] Project 3: Coming soon
+- [ ] Project 3: AI Image Generator - Coming soon
+- [ ] Project 4: Intelligent Document Analyzer - Coming soon
+- [ ] Project 5: Personalized Learning System - Coming soon
+- [ ] And 10 more exciting AI applications!
 
 ## Contributing
-Contributions to improve the project are welcome. Please follow these steps:
+
+Contributions to improve the project are welcome! We're aiming to build 15 practical AI applications and would love your input.
+
+Please see our [Contributing Guidelines](CONTRIBUTING.md) for detailed information on how to contribute to this project.
+
+Quick start:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+We welcome contributions in the following areas:
+- New AI project implementations
+- Improvements to existing projects
+- Documentation enhancements
+- Bug fixes and optimizations
+- Docker and deployment configurations
+
 ## License
 This project is part of the AI Engineering Mastery series and is available under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
-- Financial Risk dataset provided by Lorenzo Zoppelletto on Kaggle
-- Built as Chapter 1 of "AI Engineering Mastery: From Concept to Deployment with 15 Practical Applications"
+- Financial Risk dataset provided by Lorenzo Zoppelletto on Kaggle for Project 1
+- [Ollama](https://ollama.ai/) for providing the local LLM runtime used in Project 2
+- This repository is part of "AI Engineering Mastery: From Concept to Deployment with 15 Practical Applications"
+
+## Project Overview
+
+| # | Project Name | Status | Key Technologies | Description |
+|---|-------------|--------|------------------|-------------|
+| 1 | [Finance Assistant](projects/01_finance_assistant/) | Completed | Streamlit, SQLite, Pandas, Plotly | AI-powered personal finance tool with transaction analysis and chat interface |
+| 2 | [StorySketch](projects/02_storysketch/) | MVP Completed | React, Node.js, Ollama, Docker | LLM-powered social story generator for K-12 learners |
+| 3 | AI Image Generator | Planned | TBD | Coming soon |
+| 4 | Intelligent Document Analyzer | Planned | TBD | Coming soon |
+| 5 | Personalized Learning System | Planned | TBD | Coming soon |
