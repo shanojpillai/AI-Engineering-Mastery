@@ -1,0 +1,168 @@
+.auth-page {
+  display: flex;
+  min-height: calc(100vh - 64px); /* Adjust based on header height */
+}
+
+.auth-container {
+  flex: 1;
+  max-width: 500px;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-info {
+  flex: 1;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.info-content {
+  max-width: 500px;
+}
+
+.info-content h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+}
+
+.info-content p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-list li {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  position: relative;
+}
+
+.feature-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: white;
+  font-weight: bold;
+}
+
+.auth-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.auth-header h1 {
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.auth-header p {
+  color: var(--medium-gray);
+}
+
+.auth-error {
+  background-color: #ffebee;
+  border-left: 4px solid var(--error-color);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--border-radius);
+}
+
+.auth-error p {
+  margin: 0;
+  color: var(--error-color);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.password-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgot-password {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.checkbox-group {
+  margin-top: 0.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox-input {
+  margin-top: 0.25rem;
+}
+
+.checkbox-text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: auto;
+  padding-top: 2rem;
+  color: var(--medium-gray);
+}
+
+.auth-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 992px) {
+  .auth-page {
+    flex-direction: column-reverse;
+  }
+  
+  .auth-container {
+    max-width: none;
+    padding: 2rem;
+  }
+  
+  .auth-info {
+    padding: 3rem 2rem;
+  }
+  
+  .info-content {
+    text-align: center;
+    max-width: 600px;
+  }
+}
