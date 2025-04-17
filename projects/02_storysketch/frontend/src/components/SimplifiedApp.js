@@ -13,7 +13,7 @@ function SimplifiedApp() {
     models: [],
     error: null
   });
-  
+
   // State for story form
   const [storyForm, setStoryForm] = useState({
     topic: '',
@@ -25,29 +25,29 @@ function SimplifiedApp() {
     tone: 'encouraging',
     model: 'llama3'
   });
-  
+
   // State for story generation
   const [generating, setGenerating] = useState(false);
   const [generationError, setGenerationError] = useState(null);
-  
+
   // State for stories
   const [stories, setStories] = useState([]);
   const [loadingStories, setLoadingStories] = useState(true);
   const [selectedStory, setSelectedStory] = useState(null);
-  
+
   // Check Ollama status on mount
   useEffect(() => {
     checkOllamaStatus();
     fetchStories();
   }, []);
-  
+
   // Check if Ollama is running
   const checkOllamaStatus = async () => {
     try {
       setOllamaStatus(prev => ({ ...prev, checking: true, error: null }));
-      
+
       const response = await axios.get(`${API_URL}/ollama/status`);
-      
+
       setOllamaStatus({
         checking: false,
         connected: response.data.connected,
@@ -63,14 +63,14 @@ function SimplifiedApp() {
       });
     }
   };
-  
+
   // Fetch all stories
   const fetchStories = async () => {
     try {
       setLoadingStories(true);
-      
+
       const response = await axios.get(`${API_URL}/stories`);
-      
+
       setStories(response.data.stories || []);
       setLoadingStories(false);
     } catch (error) {
@@ -79,48 +79,48 @@ function SimplifiedApp() {
       setLoadingStories(false);
     }
   };
-  
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setStoryForm(prev => ({ ...prev, [name]: value }));
   };
-  
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       setGenerating(true);
       setGenerationError(null);
-      
+
       const response = await axios.post(`${API_URL}/stories/generate`, storyForm);
-      
+
       // Add the new story to the list
       setStories(prev => [response.data.story, ...prev]);
-      
+
       // Select the new story
       setSelectedStory(response.data.story);
-      
+
       setGenerating(false);
     } catch (error) {
       setGenerationError(error.response?.data?.message || error.message);
       setGenerating(false);
     }
   };
-  
+
   // Delete a story
   const handleDeleteStory = async (storyId) => {
     if (!window.confirm('Are you sure you want to delete this story?')) {
       return;
     }
-    
+
     try {
       await axios.delete(`${API_URL}/stories/${storyId}`);
-      
+
       // Remove the story from the list
       setStories(prev => prev.filter(story => story.id !== storyId));
-      
+
       // If the deleted story was selected, clear the selection
       if (selectedStory && selectedStory.id === storyId) {
         setSelectedStory(null);
@@ -130,14 +130,14 @@ function SimplifiedApp() {
       alert('Failed to delete story: ' + (error.response?.data?.message || error.message));
     }
   };
-  
+
   // Format the story content for display
   const formatStoryContent = (content) => {
     if (!content) return null;
-    
+
     // Split by markdown headings and newlines
     const parts = content.split(/(?=##)|(?=\n)/g);
-    
+
     return parts.map((part, index) => {
       // Check if this part is a heading
       if (part.startsWith('##')) {
@@ -147,7 +147,7 @@ function SimplifiedApp() {
           </h3>
         );
       }
-      
+
       // Check if this part is a title (usually at the beginning)
       if (index === 0 && !part.startsWith('#') && part.trim().length > 0) {
         return (
@@ -156,33 +156,34 @@ function SimplifiedApp() {
           </h2>
         );
       }
-      
+
       // Regular paragraph
       if (part.trim().length > 0) {
         return <p key={index}>{part}</p>;
       }
-      
+
       return null;
     });
   };
-  
+
   return (
     <div className="simplified-app">
       <header className="app-header">
         <h1>StorySketch MVP</h1>
         <p>Generate social stories for K-12 learners using Ollama</p>
       </header>
-      
+
       <main className="app-content">
         <div className="ollama-status">
           <h2>Ollama Status</h2>
-          
+
           {ollamaStatus.checking ? (
             <p>Checking Ollama status...</p>
           ) : ollamaStatus.connected ? (
             <div className="status-connected">
               <p>✅ Ollama is running</p>
-              
+              <p className="api-url">API URL: {ollamaStatus.apiUrl}</p>
+
               {ollamaStatus.models.length > 0 && (
                 <div className="models-list">
                   <p>Available models:</p>
@@ -197,12 +198,14 @@ function SimplifiedApp() {
           ) : (
             <div className="status-error">
               <p>❌ Ollama is not connected</p>
+              <p className="api-url">API URL: {ollamaStatus.apiUrl}</p>
               {ollamaStatus.error && <p className="error-message">{ollamaStatus.error}</p>}
               <div className="troubleshooting">
                 <p>Troubleshooting:</p>
                 <ol>
                   <li>Make sure Ollama is installed and running</li>
-                  <li>Run <code>ollama serve</code> in a terminal</li>
+                  <li>If using Docker, make sure the container is running</li>
+                  <li>Check that the API URL is correct in the backend config</li>
                   <li>Pull a model with <code>ollama pull llama3</code></li>
                 </ol>
                 <button onClick={checkOllamaStatus} className="btn">
@@ -212,12 +215,12 @@ function SimplifiedApp() {
             </div>
           )}
         </div>
-        
+
         <div className="app-columns">
           <div className="left-column">
             <div className="story-form-container">
               <h2>Create a Story</h2>
-              
+
               <form onSubmit={handleSubmit} className="story-form">
                 <div className="form-group">
                   <label htmlFor="topic">Topic/Situation*</label>
@@ -232,7 +235,7 @@ function SimplifiedApp() {
                     className="form-control"
                   />
                 </div>
-                
+
                 <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="ageGroup">Age Group*</label>
@@ -249,7 +252,7 @@ function SimplifiedApp() {
                       <option value="high">High School (14-18 years)</option>
                     </select>
                   </div>
-                  
+
                   <div className="form-group">
                     <label htmlFor="skillType">Skill Type*</label>
                     <select
@@ -267,7 +270,7 @@ function SimplifiedApp() {
                     </select>
                   </div>
                 </div>
-                
+
                 <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="characters">Main Characters</label>
@@ -281,7 +284,7 @@ function SimplifiedApp() {
                       className="form-control"
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label htmlFor="setting">Setting</label>
                     <input
@@ -295,7 +298,7 @@ function SimplifiedApp() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="complexity">Complexity Level*</label>
@@ -318,7 +321,7 @@ function SimplifiedApp() {
                       <span>Complex</span>
                     </div>
                   </div>
-                  
+
                   <div className="form-group">
                     <label htmlFor="tone">Tone*</label>
                     <select
@@ -336,7 +339,7 @@ function SimplifiedApp() {
                     </select>
                   </div>
                 </div>
-                
+
                 {ollamaStatus.models.length > 0 && (
                   <div className="form-group">
                     <label htmlFor="model">LLM Model*</label>
@@ -355,7 +358,7 @@ function SimplifiedApp() {
                     </select>
                   </div>
                 )}
-                
+
                 <div className="form-actions">
                   <button
                     type="submit"
@@ -365,7 +368,7 @@ function SimplifiedApp() {
                     {generating ? 'Generating...' : 'Generate Story'}
                   </button>
                 </div>
-                
+
                 {generationError && (
                   <div className="error-message">
                     <p>{generationError}</p>
@@ -373,10 +376,10 @@ function SimplifiedApp() {
                 )}
               </form>
             </div>
-            
+
             <div className="stories-list-container">
               <h2>Your Stories</h2>
-              
+
               {loadingStories ? (
                 <p>Loading stories...</p>
               ) : stories.length === 0 ? (
@@ -412,17 +415,17 @@ function SimplifiedApp() {
               )}
             </div>
           </div>
-          
+
           <div className="right-column">
             <div className="story-preview-container">
               <h2>Story Preview</h2>
-              
+
               {selectedStory ? (
                 <div className="story-preview">
                   <div className="story-content">
                     {formatStoryContent(selectedStory.content)}
                   </div>
-                  
+
                   <div className="story-actions">
                     <button
                       className="btn"
@@ -462,7 +465,7 @@ function SimplifiedApp() {
           </div>
         </div>
       </main>
-      
+
       <footer className="app-footer">
         <p>StorySketch MVP - Powered by Ollama</p>
       </footer>

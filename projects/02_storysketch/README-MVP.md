@@ -24,6 +24,12 @@ First, make sure Ollama is installed on your system:
 
 - **Windows/macOS**: Download from [ollama.ai](https://ollama.ai/)
 - **Linux**: Follow the instructions on the Ollama website
+- **Docker**: Use the official Docker image `ollama/ollama`
+
+```bash
+# Run Ollama in Docker
+docker run -d -p 11434:11434 --name ollama ollama/ollama
+```
 
 ### 2. Pull a Model
 
@@ -46,7 +52,27 @@ Make sure Ollama is running:
 ollama serve
 ```
 
-### 4. Test Ollama Connection
+### 4. Configure for Docker (if using Docker)
+
+If you're running Ollama in Docker, you need to update the configuration to point to the correct URL:
+
+1. Edit the `.env` file in the `backend` directory:
+
+```bash
+cd projects/02_storysketch/backend
+```
+
+Update the `OLLAMA_API_URL` in the `.env` file:
+
+```
+# For Docker on the same machine
+OLLAMA_API_URL=http://host.docker.internal:11434
+
+# Or use your Docker host's IP address
+# OLLAMA_API_URL=http://192.168.1.100:11434
+```
+
+### 5. Test Ollama Connection
 
 Run the quick test script to verify Ollama is working:
 
@@ -57,7 +83,7 @@ node quick-test-ollama.js
 
 You should see a success message and a sample story generation.
 
-### 5. Start the Backend
+### 6. Start the Backend
 
 ```bash
 cd projects/02_storysketch/backend
@@ -67,7 +93,7 @@ npm run dev
 
 The backend will start on http://localhost:5000
 
-### 6. Start the Frontend
+### 7. Start the Frontend
 
 In a new terminal:
 
@@ -112,9 +138,19 @@ projects/02_storysketch/
 
 ### Ollama Connection Issues
 
+#### Local Ollama
 - Make sure Ollama is running with `ollama serve`
 - Verify you have pulled at least one model with `ollama list`
 - Check that port 11434 is accessible
+
+#### Docker Ollama
+- Check if the Ollama container is running: `docker ps | grep ollama`
+- Make sure the container is exposing port 11434: `docker ps -a`
+- Verify the correct URL in the `.env` file:
+  - For Docker on the same machine: `http://host.docker.internal:11434`
+  - For Docker on a specific IP: `http://your-docker-ip:11434`
+- Check Docker logs: `docker logs ollama`
+- Try pulling a model in the container: `docker exec -it ollama ollama pull llama3`
 
 ### Story Generation Issues
 
