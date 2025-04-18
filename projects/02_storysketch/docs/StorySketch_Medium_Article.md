@@ -45,6 +45,53 @@ The application consists of:
 3. **Ollama Integration**: Local LLM execution with support for multiple models
 4. **File-based Storage**: Simple JSON storage for the MVP version
 
+### Project Structure
+
+The StorySketch project follows a clean, modular structure that separates concerns and makes the codebase easy to navigate:
+
+```
+projects/02_storysketch/
+├── frontend/                  # React frontend application
+│   ├── public/                # Static files
+│   │   ├── index.html         # HTML entry point
+│   │   └── manifest.json      # Web app manifest
+│   └── src/                   # Source code
+│       ├── components/        # Reusable UI components
+│       │   └── SimplifiedApp.js # Main application component for MVP
+│       │   └── SimplifiedApp.css # Styles for the main component
+│       ├── App.js             # Root component
+│       ├── App.css            # Global styles
+│       ├── index.js           # JavaScript entry point
+│       └── index.css          # Base styles
+│
+├── backend/                   # Node.js/Express backend
+│   ├── src/                   # Source code
+│   │   ├── server.js          # Express server (MVP simplified version)
+│   │   └── config.js          # Configuration settings
+│   ├── data/                  # File storage for MVP version
+│   │   └── stories/           # JSON files for saved stories
+│   └── .env                   # Environment variables
+│
+├── docs/                      # Documentation
+│   ├── setup-guide.md         # Setup instructions
+│   ├── ollama-integration.md  # Ollama integration details
+│   └── StorySketch_Medium_Article.md # This article
+│
+├── quick-test-ollama.js       # Script to test Ollama connection
+├── package.json               # Root package.json for dependencies
+└── README.md                  # Project documentation
+```
+
+This structure follows modern best practices for web application development:
+
+- **Separation of concerns**: Frontend and backend are clearly separated
+- **Component-based architecture**: UI is built with reusable React components
+- **Configuration management**: Environment variables and config files for different environments
+- **Documentation**: Comprehensive documentation for setup and usage
+- **Testing utilities**: Tools for testing the Ollama connection
+
+For the MVP version, I've kept the structure intentionally simple, focusing on the core functionality rather than complex architecture. This allows for rapid development and iteration while maintaining a clean, maintainable codebase.
+
 ## Key Features and Implementation
 
 ### 1. Personalized Story Generation
@@ -75,9 +122,9 @@ I developed a two-part prompt strategy:
 #### System Prompt
 
 ```
-You are an educational content creator specializing in social stories for children. 
-Social stories are short narratives that help children understand social situations, 
-behaviors, or concepts. Your task is to create age-appropriate, structured social 
+You are an educational content creator specializing in social stories for children.
+Social stories are short narratives that help children understand social situations,
+behaviors, or concepts. Your task is to create age-appropriate, structured social
 stories that follow these guidelines:
 
 1. Use clear, concise language appropriate for the specified age group
@@ -87,7 +134,7 @@ stories that follow these guidelines:
 5. Use the specified tone throughout the story
 6. Adjust complexity based on the complexity level (1-5)
 
-Your stories should be educational, engaging, and helpful for children to understand 
+Your stories should be educational, engaging, and helpful for children to understand
 social concepts or develop specific skills.
 ```
 
@@ -117,7 +164,89 @@ Integrating with Ollama was surprisingly straightforward. The backend communicat
 2. Send generation requests with the constructed prompt
 3. Process and format the responses
 
-Here's a simplified example of the Ollama API integration:
+#### Backend Server Structure
+
+The backend server (`server.js`) is organized into logical sections:
+
+```javascript
+// Import dependencies
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
+const axios = require('axios');
+const { config } = require('./config');
+
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// API Routes
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'StorySketch MVP server is running' });
+});
+
+// Ollama status endpoint
+app.get('/api/ollama/status', async (req, res) => {
+  try {
+    const response = await axios.get(`${config.OLLAMA_API_URL}/api/tags`);
+    res.json({
+      status: 'ok',
+      message: 'Ollama is running',
+      models: response.data.models || []
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to connect to Ollama',
+      error: error.message
+    });
+  }
+});
+
+// Story generation endpoint
+app.post('/api/stories/generate', async (req, res) => {
+  // Story generation logic with Ollama API
+});
+
+// Story management endpoints
+app.get('/api/stories', (req, res) => {
+  // Get all stories
+});
+
+app.post('/api/stories', (req, res) => {
+  // Save a story
+});
+
+app.get('/api/stories/:id', (req, res) => {
+  // Get a specific story
+});
+
+app.delete('/api/stories/:id', (req, res) => {
+  // Delete a story
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`StorySketch MVP server running on port ${PORT}`);
+  console.log(`API available at http://localhost:${PORT}/api`);
+  console.log(`Using Ollama at: ${config.OLLAMA_API_URL}`);
+  console.log(`Default model: ${config.DEFAULT_MODEL}`);
+});
+```
+
+This structure provides a clean separation of concerns with:
+- Configuration management
+- Middleware setup
+- API endpoints for health checks and Ollama status
+- Story generation and management endpoints
+- Server initialization
+
+Here's a simplified example of the Ollama API integration for story generation:
 
 ```javascript
 // Example of Ollama API integration
@@ -125,7 +254,7 @@ const axios = require('axios');
 
 async function generateStory(params) {
   const { topic, ageGroup, skillType, characters, setting, complexity, tone, model } = params;
-  
+
   // Construct the prompt
   const systemPrompt = "You are an educational content creator..."; // System role
   const userPrompt = `Please create a social story with the following parameters:
@@ -136,9 +265,9 @@ async function generateStory(params) {
     Setting: ${setting || 'No specific setting'}
     Complexity Level: ${complexity} (1-5)
     Tone: ${tone}
-    
+
     Format the story with clear section headings and appropriate paragraph breaks.`;
-  
+
   try {
     // Send request to Ollama API
     const response = await axios.post('http://localhost:11434/api/generate', {
@@ -147,7 +276,7 @@ async function generateStory(params) {
       system: systemPrompt,
       stream: false
     });
-    
+
     return {
       success: true,
       story: response.data.response,
@@ -172,6 +301,226 @@ The frontend provides an intuitive interface for:
 - Printing stories for classroom or therapeutic use
 
 The UI is designed to be accessible to educators and parents without technical expertise, with clear guidance on parameter selection and straightforward story management.
+
+#### Frontend Component Structure
+
+The main frontend component (`SimplifiedApp.js`) is structured to provide a clean, intuitive user experience:
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './SimplifiedApp.css';
+
+const SimplifiedApp = () => {
+  // State management for form inputs, stories, and UI state
+  const [formData, setFormData] = useState({
+    topic: '',
+    ageGroup: 'elementary',
+    skillType: 'social',
+    characters: '',
+    setting: '',
+    complexity: 3,
+    tone: 'encouraging',
+    model: 'llama3'
+  });
+  const [stories, setStories] = useState([]);
+  const [selectedStory, setSelectedStory] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [ollamaStatus, setOllamaStatus] = useState({ status: 'unknown' });
+
+  // Load stories and check Ollama status on component mount
+  useEffect(() => {
+    fetchStories();
+    checkOllamaStatus();
+  }, []);
+
+  // Function to check if Ollama is running
+  const checkOllamaStatus = async () => {
+    try {
+      const response = await axios.get('/api/ollama/status');
+      setOllamaStatus(response.data);
+    } catch (error) {
+      setOllamaStatus({
+        status: 'error',
+        message: 'Failed to connect to Ollama'
+      });
+    }
+  };
+
+  // Function to fetch all saved stories
+  const fetchStories = async () => {
+    try {
+      const response = await axios.get('/api/stories');
+      setStories(response.data);
+    } catch (error) {
+      console.error('Error fetching stories:', error);
+    }
+  };
+
+  // Function to generate a new story
+  const generateStory = async (e) => {
+    e.preventDefault();
+    setIsGenerating(true);
+
+    try {
+      const response = await axios.post('/api/stories/generate', formData);
+
+      if (response.data.success) {
+        // Handle successful story generation
+        const newStory = {
+          id: Date.now().toString(),
+          ...formData,
+          content: response.data.story,
+          createdAt: new Date().toISOString()
+        };
+
+        // Save the story
+        await axios.post('/api/stories', newStory);
+
+        // Update the UI
+        setStories([newStory, ...stories]);
+        setSelectedStory(newStory);
+      } else {
+        // Handle generation error
+        console.error('Story generation failed:', response.data.error);
+      }
+    } catch (error) {
+      console.error('Error generating story:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // Function to delete a story
+  const deleteStory = async (id) => {
+    try {
+      await axios.delete(`/api/stories/${id}`);
+      setStories(stories.filter(story => story.id !== id));
+      if (selectedStory && selectedStory.id === id) {
+        setSelectedStory(null);
+      }
+    } catch (error) {
+      console.error('Error deleting story:', error);
+    }
+  };
+
+  // Function to print a story
+  const printStory = () => {
+    if (!selectedStory) return;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${selectedStory.topic} - Social Story</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 40px; }
+            h1 { color: #2c3e50; }
+            .story-content { line-height: 1.6; }
+          </style>
+        </head>
+        <body>
+          <h1>${selectedStory.topic}</h1>
+          <div class="story-content">${selectedStory.content}</div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+  // Render the UI with form, story list, and story preview
+  return (
+    <div className="app-container">
+      {/* Header */}
+      <header>
+        <h1>StorySketch</h1>
+        <p>LLM-powered social story generator for K-12 learners</p>
+      </header>
+
+      {/* Main content */}
+      <main>
+        {/* Ollama status indicator */}
+        <div className={`ollama-status ${ollamaStatus.status}`}>
+          {ollamaStatus.status === 'ok' ?
+            `Ollama is running - ${ollamaStatus.models?.length || 0} models available` :
+            'Ollama is not running - Please start Ollama'}
+        </div>
+
+        {/* Left panel - Story form */}
+        <div className="panel form-panel">
+          <h2>Create a Story</h2>
+          <form onSubmit={generateStory}>
+            {/* Form inputs for story parameters */}
+            {/* ... form fields for topic, age group, etc. ... */}
+            <button
+              type="submit"
+              disabled={isGenerating || ollamaStatus.status !== 'ok'}
+            >
+              {isGenerating ? 'Generating...' : 'Generate Story'}
+            </button>
+          </form>
+        </div>
+
+        {/* Middle panel - Story list */}
+        <div className="panel stories-panel">
+          <h2>Your Stories</h2>
+          <div className="stories-list">
+            {stories.length === 0 ? (
+              <p>No stories yet. Create your first story!</p>
+            ) : (
+              stories.map(story => (
+                <div
+                  key={story.id}
+                  className={`story-item ${selectedStory?.id === story.id ? 'selected' : ''}`}
+                  onClick={() => setSelectedStory(story)}
+                >
+                  <h3>{story.topic}</h3>
+                  <p>{story.ageGroup} | {story.skillType}</p>
+                  <button onClick={() => deleteStory(story.id)}>Delete</button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Right panel - Story preview */}
+        <div className="panel preview-panel">
+          <h2>Story Preview</h2>
+          {selectedStory ? (
+            <div className="story-preview">
+              <h3>{selectedStory.topic}</h3>
+              <div
+                className="story-content"
+                dangerouslySetInnerHTML={{ __html: selectedStory.content }}
+              />
+              <button onClick={printStory}>Print Story</button>
+            </div>
+          ) : (
+            <p>Select a story to preview</p>
+          )}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer>
+        <p>StorySketch - Part of the AI Engineering Mastery series</p>
+      </footer>
+    </div>
+  );
+};
+
+export default SimplifiedApp;
+```
+
+This component demonstrates several important patterns:
+
+1. **State management**: Using React hooks to manage application state
+2. **API integration**: Communicating with the backend API for story operations
+3. **Conditional rendering**: Showing different UI based on application state
+4. **Form handling**: Managing form inputs and submission
+5. **Error handling**: Gracefully handling API errors
+6. **Responsive design**: Creating a layout that works on different devices
 
 ## The MVP Approach: Lessons Learned
 
