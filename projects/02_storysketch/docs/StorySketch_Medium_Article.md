@@ -43,7 +43,7 @@ The application consists of:
 1. **React Frontend**: A responsive single-page application for story creation and management
 2. **Express Backend**: A Node.js server handling API requests, story storage, and Ollama communication
 3. **Ollama Integration**: Local LLM execution with support for multiple models
-4. **File-based Storage**: Simple JSON storage for the MVP version
+4. **File-based Storage**: Simple JSON storage for efficient data management
 
 ### Project Structure
 
@@ -66,9 +66,9 @@ projects/02_storysketch/
 │
 ├── backend/                   # Node.js/Express backend
 │   ├── src/                   # Source code
-│   │   ├── server.js          # Express server (MVP simplified version)
+│   │   ├── server.js          # Express server
 │   │   └── config.js          # Configuration settings
-│   ├── data/                  # File storage for MVP version
+│   ├── data/                  # File storage for stories
 │   │   └── stories/           # JSON files for saved stories
 │   └── .env                   # Environment variables
 │
@@ -90,7 +90,7 @@ This structure follows modern best practices for web application development:
 - **Documentation**: Comprehensive documentation for setup and usage
 - **Testing utilities**: Tools for testing the Ollama connection
 
-For the MVP version, I've kept the structure intentionally simple, focusing on the core functionality rather than complex architecture. This allows for rapid development and iteration while maintaining a clean, maintainable codebase.
+I've kept the structure intentionally clean and focused, prioritizing core functionality rather than unnecessary complexity. This allows for rapid development and iteration while maintaining a clean, maintainable codebase.
 
 ## Key Features and Implementation
 
@@ -187,7 +187,7 @@ app.use(express.json());
 
 // API Routes
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'StorySketch MVP server is running' });
+  res.json({ status: 'ok', message: 'StorySketch server is running' });
 });
 
 // Ollama status endpoint
@@ -232,7 +232,7 @@ app.delete('/api/stories/:id', (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`StorySketch MVP server running on port ${PORT}`);
+  console.log(`StorySketch server running on port ${PORT}`);
   console.log(`API available at http://localhost:${PORT}/api`);
   console.log(`Using Ollama at: ${config.OLLAMA_API_URL}`);
   console.log(`Default model: ${config.DEFAULT_MODEL}`);
@@ -522,19 +522,20 @@ This component demonstrates several important patterns:
 5. **Error handling**: Gracefully handling API errors
 6. **Responsive design**: Creating a layout that works on different devices
 
-## The MVP Approach: Lessons Learned
+## Development Approach: Lessons Learned
 
-For StorySketch, I adopted a Minimum Viable Product (MVP) approach, focusing on core functionality first:
+For StorySketch, I adopted a focused, iterative development approach, prioritizing core functionality:
 
-1. **Start with a simplified architecture**: File-based storage instead of a database
-2. **Focus on the core AI integration**: Perfect the LLM integration before adding features
-3. **Implement basic UI with clear feedback**: Help users understand the AI capabilities
-4. **Gather feedback early**: Test with real users to identify pain points
+1. **Start with a clean architecture**: File-based storage for simplicity and portability
+2. **Focus on the core AI integration**: Perfect the LLM integration before adding additional features
+3. **Implement intuitive UI with clear feedback**: Help users understand the AI capabilities
+4. **Gather feedback early**: Test with real users to identify pain points and improvement areas
 
 This approach allowed me to:
-- Validate the concept quickly
-- Identify and solve integration challenges early
-- Build a foundation for more advanced features
+- Validate the concept quickly with real users
+- Identify and solve integration challenges early in the development cycle
+- Build a solid foundation for more advanced features
+- Deliver a functional application that provides immediate value
 
 ## Implementation Challenges and Solutions
 
@@ -564,7 +565,7 @@ Local LLM inference can take varying amounts of time depending on hardware. I ad
 
 ## Future Directions
 
-The current MVP version of StorySketch demonstrates the potential of local LLM integration for educational applications. Future enhancements include:
+The current version of StorySketch demonstrates the potential of local LLM integration for educational applications. Planned enhancements include:
 
 1. **Image generation**: Adding LLM-guided image creation for story illustrations
 2. **Collaborative features**: Allowing educators to share and collaborate on stories
