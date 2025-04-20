@@ -254,7 +254,7 @@ projects/02_storysketch/
 │   │   └── manifest.json      # Web app manifest
 │   └── src/                   # Source code
 │       ├── components/        # Reusable UI components
-│       │   └── SimplifiedApp.js # Main application component for MVP
+│       │   └── SimplifiedApp.js # Main application component
 │       │   └── SimplifiedApp.css # Styles for the main component
 │       ├── App.js             # Root component
 │       ├── App.css            # Global styles
@@ -263,11 +263,15 @@ projects/02_storysketch/
 │
 ├── backend/                   # Node.js/Express backend
 │   ├── src/                   # Source code
-│   │   ├── server.js          # Express server (MVP simplified version)
+│   │   ├── server.js          # Express server
 │   │   └── config.js          # Configuration settings
-│   ├── data/                  # File storage for MVP version
+│   ├── data/                  # File storage for stories
 │   │   └── stories/           # JSON files for saved stories
 │   └── .env                   # Environment variables
+│
+├── docs/                      # Documentation
+│   ├── setup-guide.md         # Setup instructions
+│   └── ollama-integration.md  # Ollama integration details
 │
 ├── quick-test-ollama.js       # Script to test Ollama connection
 ├── package.json               # Root package.json for dependencies
@@ -493,7 +497,7 @@ If you encounter issues not covered in this documentation:
 
 ### Current Status
 
-The StorySketch project is currently in MVP (Minimum Viable Product) state with the following features implemented:
+The StorySketch project currently has the following features implemented:
 
 - **Core Functionality**:
   - Story generation with customizable parameters
@@ -510,7 +514,7 @@ The StorySketch project is currently in MVP (Minimum Viable Product) state with 
 
 ### Development Roadmap
 
-1. **MVP Phase** ✅
+1. **Phase 1: Core Functionality** ✅
    - Define the LLM prompt engineering strategy for educational content ✅
    - Build the core LLM integration layer with Ollama ✅
    - Develop the story generation UI ✅
@@ -518,13 +522,13 @@ The StorySketch project is currently in MVP (Minimum Viable Product) state with 
    - Add print functionality ✅
    - Create Docker support ✅
 
-2. **Enhancement Phase** 🔄
+2. **Phase 2: Enhanced Features** 🔄
    - Implement image generation capabilities 🔄
    - Add user authentication and profiles 📅
    - Develop database storage 📅
    - Create advanced story management features 📅
 
-3. **Full Version Phase** 📅
+3. **Phase 3: Advanced Functionality** 📅
    - Add export functionality (PDF, Google Slides) 📅
    - Implement collaborative features 📅
    - Create a story library with templates 📅
