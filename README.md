@@ -246,6 +246,6 @@ This project is part of the AI Engineering Mastery series and is available under
 |---|-------------|--------|------------------|-------------|
 | 1 | [Finance Assistant](projects/01_finance_assistant/) | Completed | Streamlit, SQLite, Pandas, Plotly | AI-powered personal finance tool with transaction analysis and chat interface |
 | 2 | [StorySketch](projects/02_storysketch/) | MVP Completed | React, Node.js, Ollama, Docker | LLM-powered social story generator for K-12 learners |
-| 3 | AI Image Generator | Planned | TBD | Coming soon |
+| 3 | [hugo-ai-studio](https://github.com/shanojpillai/hugo-ai-studio) | Completed | Hugo,Ollama,Streamlit,FastAPI,Docker & Nginx | A comprehensive, containerized solution that combines Hugo static site generation with AI-powered content creation using local LLMs. |
 | 4 | Intelligent Document Analyzer | Planned | TBD | Coming soon |
 | 5 | Personalized Learning System | Planned | TBD | Coming soon |
